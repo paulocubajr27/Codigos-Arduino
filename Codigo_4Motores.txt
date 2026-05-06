@@ -1,0 +1,57 @@
+#include <LiquidCrystal.h> 
+
+LiquidCrystal lcd(A5, A4, 13, 12, 7, 6); 
+
+const int sensorPin = A0;
+const int motor1 = 2;
+const int motor2 = 3;
+const int motor3 = 4;
+const int motor4 = 5;
+const int verde = 8;
+const int vermelho = 9;
+const int azul = 10;
+const int amarelo = 11;
+
+void setup() {
+  lcd.begin(16, 2);
+  lcd.setCursor(0, 0);
+  lcd.print("Temperatura:");
+  pinMode(motor1, OUTPUT);
+  pinMode(motor2, OUTPUT);
+  pinMode(motor3, OUTPUT);
+  pinMode(motor4, OUTPUT);
+  pinMode(verde, OUTPUT);
+  pinMode(vermelho, OUTPUT);
+  pinMode(azul, OUTPUT);
+  pinMode(amarelo, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int leituraADC = analogRead(sensorPin);
+  float voltagem = leituraADC * (5.0 / 1023.0);
+  float temperaturaC = (voltagem - 0.5) * 100;
+
+  digitalWrite(motor1, temperaturaC > 20);
+  digitalWrite(verde, temperaturaC > 20);
+
+  digitalWrite(motor2, temperaturaC > 30);
+  digitalWrite(vermelho, temperaturaC > 30);
+
+  digitalWrite(motor3, temperaturaC > 40);
+  digitalWrite(azul, temperaturaC > 40);
+
+  digitalWrite(motor4, temperaturaC > 50);
+  digitalWrite(amarelo, temperaturaC > 50);
+
+  lcd.setCursor(0, 1);
+  lcd.print(temperaturaC);
+  lcd.print(" C");
+
+  Serial.print("Temperatura: ");
+  Serial.print(temperaturaC);
+  Serial.println(" C");
+
+  delay(500);
+}
+
